@@ -5,7 +5,6 @@
     <option name="delegateToJavac" value="true" />
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="ajc" />
     <addNotNullAssertions enabled="false" />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
@@ -18,19 +17,11 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true">
+      <profile default="true" name="Default">
         <sourceOutputDir name=".apt_generated" />
         <sourceTestOutputDir name=".apt_generated_tests" />
         <outputRelativeToContentRoot value="true" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="buildSrc_main" target="1.8" />
-      <module name="buildSrc_test" target="1.8" />
-      <module name="event-api_demo" target="1.8" />
-      <module name="event-api_libraries" target="1.8" />
-      <module name="event-api_main" target="1.8" />
-      <module name="event-api_test" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

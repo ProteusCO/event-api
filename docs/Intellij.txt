@@ -1,8 +1,0 @@
-This starter project was tested with Intellij 2016.3.2.
-
-There are two run configurations.
-*) App with LTW. This is short for Application with Load-Time Weaving (AspectJ).
-*) App with CTW. This is short for Application with Compile-Time Weaving (AspectJ).
-
-If you are using Intellij Ultimate, you can use the example run configuration "App with CTW" to launch the app. Otherwise, use the
-"App with LTW".

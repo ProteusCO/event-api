@@ -16,6 +16,8 @@
           </value>
         </option>
         <option name="FIELD_NAME_PREFIX" value="_" />
+        <option name="GENERATE_FINAL_LOCALS" value="true" />
+        <option name="GENERATE_FINAL_PARAMETERS" value="true" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
         <option name="IMPORT_LAYOUT_TABLE">
           <value>
@@ -31,6 +33,7 @@
             <package name="com.i2rd" withSubpackages="true" static="false" />
             <package name="com.i2rd.java.miwt" withSubpackages="true" static="false" />
             <emptyLine />
+            <package name="co.proteus" withSubpackages="true" static="false" />
             <package name="com.proteusframework" withSubpackages="true" static="false" />
             <package name="org.proteusframework" withSubpackages="true" static="false" />
             <package name="net.proteusframework" withSubpackages="true" static="false" />
