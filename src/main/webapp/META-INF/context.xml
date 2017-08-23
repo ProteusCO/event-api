@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Interactive Information R & D (I2RD) LLC.
+  ~ All Rights Reserved.
+  ~
+  ~ This software is confidential and proprietary information of
+  ~ I2RD LLC ("Confidential Information"). You shall not disclose
+  ~ such Confidential Information and shall use it only in
+  ~ accordance with the terms of the license agreement you entered
+  ~ into with I2RD.
+  -->
+<Context>
+    <Manager pathname="" />
+    <!--
+    <Resource name="${jndi_name}" auth="Container" type="javax.sql.DataSource"
+              username="${db.username}" password="${db.password}"
+              driverClassName="org.postgresql.Driver"
+              url="${db.url}"
+              maxActive="100" maxWait="5000"
+              validationQuery="select 1">
+    </Resource>
+
+OR
+
+    <Resource name="${jndi_name}" auth="Container" type="javax.sql.DataSource"/>
+    <ResourceParams name="${jndi_name}">
+       <parameter>
+           <name>factory</name>
+           <value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+       </parameter>
+       <parameter>
+           <name>url</name>
+           <value>${db.url}</value>
+       </parameter>
+       <parameter>
+           <name>password</name>
+           <value>${db.password}</value>
+       </parameter>
+       <parameter>
+           <name>maxActive</name>
+           <value>4</value>
+       </parameter>
+       <parameter>
+           <name>maxWait</name>
+           <value>5000</value>
+       </parameter>
+       <parameter>
+           <name>driverClassName</name>
+           <value>org.postgresql.Driver</value>
+       </parameter>
+       <parameter>
+           <name>username</name>
+           <value>${db.username}</value>
+       </parameter>
+       <parameter>
+           <name>maxIdle</name>
+           <value>2</value>
+       </parameter>
+     </ResourceParams>
+   -->
+</Context>
