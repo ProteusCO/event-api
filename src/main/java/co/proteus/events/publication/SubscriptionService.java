@@ -143,14 +143,13 @@ public final class SubscriptionService
      *
      * @param topic the topic
      * @param eventType the event type
-     * @param payloadClass the type of the event payload
      * @param subscriber the subscriber to notify
      * @param <T> the type of the {@link Event#getPayload event payload}
      */
     public <T> void subscribe(
-        final String topic, final String eventType, final Class<T> payloadClass, final Subscriber<T> subscriber)
+        final String topic, final String eventType, final Subscriber<T> subscriber)
     {
-        subscribe(topic, eventType, it -> true, payloadClass, subscriber);
+        subscribe(topic, eventType, it -> true, subscriber);
     }
 
     /**
@@ -159,7 +158,6 @@ public final class SubscriptionService
      * @param topic the topic
      * @param eventType the event type
      * @param messageFilter the filter to use to ignore messages
-     * @param payloadClass the type of the event payload
      * @param subscriber the subscriber to notify
      * @param <T> the type of the {@link Event#getPayload event payload}
      *
@@ -167,7 +165,7 @@ public final class SubscriptionService
      */
     public <T> CompletableFuture<Subscription<T>> subscribe(
         final String topic, final String eventType, final MessageFilter messageFilter,
-        final Class<T> payloadClass, final Subscriber<T> subscriber)
+        final Subscriber<T> subscriber)
     {
         final CompletableFuture<Subscription<T>> result = new CompletableFuture<>();
 
