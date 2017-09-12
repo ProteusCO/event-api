@@ -3,7 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc_main.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc_main.iml" group="buildSrc" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc_test.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc_test.iml" group="buildSrc" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/event-api.iml" filepath="$PROJECT_DIR$/.idea/modules/event-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/event-api_main.iml" filepath="$PROJECT_DIR$/.idea/modules/event-api_main.iml" group="event-api" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/event-api_test.iml" filepath="$PROJECT_DIR$/.idea/modules/event-api_test.iml" group="event-api" />
     </modules>
   </component>
 </project>

@@ -15,6 +15,7 @@ import com.amazonaws.services.iot.client.AWSIotMessage;
 import com.amazonaws.services.iot.client.AWSIotQos;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import co.proteus.events.marshalling.EventMarshaller;
 import co.proteus.events.marshalling.MarshalException;
@@ -27,7 +28,8 @@ import co.proteus.events.publication.Event;
  */
 public class JsonMarshaller implements EventMarshaller
 {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectWriter WRITER = new ObjectMapper()
+        .writer();
 
     private final AWSIotQos _qos;
 
@@ -47,7 +49,7 @@ public class JsonMarshaller implements EventMarshaller
         try
         {
             final EventData<T> fields = new EventData<>(event);
-            return new AWSIotMessage(event.getTopic(), _qos, MAPPER.writeValueAsBytes(fields));
+            return new AWSIotMessage(event.getTopic(), _qos, WRITER.writeValueAsBytes(fields));
         }
         catch (JsonProcessingException e)
         {

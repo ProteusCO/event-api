@@ -15,13 +15,11 @@ import com.amazonaws.services.iot.client.AWSIotException;
 import com.amazonaws.services.iot.client.AWSIotMessage;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
 import com.amazonaws.services.iot.client.AWSIotTopic;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,39 +27,52 @@ import java.util.concurrent.ConcurrentHashMap;
 import co.proteus.events.filtering.MessageFilter;
 import co.proteus.events.marshalling.EventUnmarshaller;
 import co.proteus.events.marshalling.UnmarshalException;
-import co.proteus.events.marshalling.json.EventMetadata;
 import co.proteus.events.marshalling.json.JsonUnmarshaller;
 
 import static com.google.common.collect.Multimaps.synchronizedListMultimap;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * Service to receive IoT messages and decode them as {@link Event events}.
+ *
  * @author Justin Piper (jpiper@proteus.co)
  */
 public final class SubscriptionService
 {
-    public static class Subscription<T>
+    public static final class Subscription<T>
     {
-        final String topic;
-        final String eventType;
-        final MessageFilter messageFilter;
-        final Subscriber<T> subscriber;
-        final Class<T> payloadType;
+        final String _topic;
+        final String _eventType;
+        final MessageFilter _messageFilter;
+        final Subscriber<T> _subscriber;
 
-        @SuppressWarnings("ParameterHidesMemberVariable")
-        private Subscription(final String topic, final String eventType, final MessageFilter messageFilter,
-            final Subscriber<T> subscriber,
-            final Class<T> payloadType)
+        private Subscription(
+            final String topic, final String eventType, final MessageFilter messageFilter, final Subscriber<T> subscriber)
         {
-            this.topic = topic;
-            this.eventType = eventType;
-            this.messageFilter = messageFilter;
-            this.subscriber = subscriber;
-            this.payloadType = payloadType;
+            _topic = topic;
+            _eventType = eventType;
+            _messageFilter = messageFilter;
+            _subscriber = subscriber;
+        }
+
+        @Override
+        public String toString()
+        {
+            return getClass().getSimpleName() + '{' +
+                   "topic='" + _topic + '\'' +
+                   ", eventType='" + _eventType + '\'' +
+                   ", subscriber=" + _subscriber +
+                   '}';
+        }
+
+        private void receive(final Event<?> event)
+        {
+            //noinspection unchecked
+            _subscriber.receive((Event<T>) event);
         }
     }
 
-    private class EventTopic extends AWSIotTopic
+    private final class EventTopic extends AWSIotTopic
     {
         @SuppressWarnings("ParameterHidesMemberVariable")
         public EventTopic(final String topic)
@@ -74,59 +85,39 @@ public final class SubscriptionService
         {
             try
             {
-                final EventMetadata metadata = MAPPER.readValue(message.getPayload(), EventMetadata.class);
-                final Channel channel = new Channel(message.getTopic(), metadata.getEventType());
+                final Event<?> event = _unmarshaller.unmarshall(message);
+                final Channel channel = new Channel(message.getTopic(), event.getEventType());
                 _subscriptions.get(channel).stream()
-                    .filter(sub -> _isIncluded(sub, message))
-                    .forEach(sub -> _dispatch(sub, channel, message));
+                    .filter(sub -> _isAccepted(sub, message))
+                    .forEach(sub -> sub.receive(event));
             }
-            catch (final IOException e)
+            catch (final UnmarshalException|ClassCastException e)
             {
                 _logger.error("Error unmarshalling " + message, e);
             }
         }
 
-        private boolean _isIncluded(final Subscription<?> subscription, final AWSIotMessage message)
+        private boolean _isAccepted(final Subscription<?> subscription, final AWSIotMessage message)
         {
-            return subscription.messageFilter.isIncluded(new MessageFilter.Parameters(message));
-        }
-
-        private void _dispatch(final Subscription<?> sub, final Channel channel, final AWSIotMessage message)
-        {
-            final EventUnmarshaller unmarshaller = _unmarshallers.getOrDefault(channel, _defaultUnmarshaller);
-            try
-            {
-                //noinspection rawtypes
-                final Event event = unmarshaller.unmarshall(message, sub.payloadType);
-                //noinspection unchecked
-                sub.subscriber.receive(event);
-            }
-            catch (final UnmarshalException | ClassCastException e)
-            {
-                _logger.error("Error unmarshalling " + message, e);
-            }
+            return subscription._messageFilter.accept(new MessageFilter.Parameters(message));
         }
     }
 
     /** An unmarshaller that creates {@link Event events} using Jackson to decode the payload. */
     private static final EventUnmarshaller DEFAULT_UNMARSHALLER = new JsonUnmarshaller();
 
-    /** Used to extract event metadata */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     /** Logger */
     private static final Logger _logger = LogManager.getLogger(SubscriptionService.class);
 
     private final Map<String, EventTopic> _topics = new ConcurrentHashMap<>();
-    private final Map<Channel, EventUnmarshaller> _unmarshallers = new ConcurrentHashMap<>();
     private final Multimap<Channel, Subscription<?>> _subscriptions = synchronizedListMultimap(ArrayListMultimap.create());
 
     private final AWSIotMqttClient _client;
-    private final EventUnmarshaller _defaultUnmarshaller;
+    private final EventUnmarshaller _unmarshaller;
 
     /**
      * Create an instance of {@code SubscriptionService} that uses the {@link #DEFAULT_UNMARSHALLER default unmarshaller} to
-     * decode payloads if there is not one registered.
+     * decode payloads.
      *
      * @param client the IoT client
      */
@@ -139,12 +130,12 @@ public final class SubscriptionService
      * Create an instance of {@code SubscriptionService}.
      *
      * @param client the IoT client
-     * @param defaultUnmarshaller the unmarshaller to use to decode event payloads if there is not one registered
+     * @param unmarshaller the unmarshaller to use to decode event payloads
      */
-    public SubscriptionService(final AWSIotMqttClient client, final EventUnmarshaller defaultUnmarshaller)
+    public SubscriptionService(final AWSIotMqttClient client, final EventUnmarshaller unmarshaller)
     {
         _client = client;
-        _defaultUnmarshaller = defaultUnmarshaller;
+        _unmarshaller = unmarshaller;
     }
 
     /**
@@ -181,7 +172,7 @@ public final class SubscriptionService
         final CompletableFuture<Subscription<T>> result = new CompletableFuture<>();
 
         final Channel channel = new Channel(topic, eventType);
-        final Subscription<T> subscription = new Subscription<>(topic, eventType, messageFilter, subscriber, payloadClass);
+        final Subscription<T> subscription = new Subscription<>(topic, eventType, messageFilter, subscriber);
         try
         {
             if (!_topics.containsKey(topic)) _createTopic(topic);
@@ -205,32 +196,19 @@ public final class SubscriptionService
      */
     public void unsubscribe(final Subscription<?> subscription)
     {
-        final Channel channel = new Channel(subscription.topic, subscription.eventType);
+        final Channel channel = new Channel(subscription._topic, subscription._eventType);
         _subscriptions.remove(channel, subscription);
         if (!_subscriptions.containsKey(channel))
         {
             try
             {
-                _removeTopic(subscription.topic);
+                _removeTopic(subscription._topic);
             }
             catch (AWSIotException e)
             {
-                _logger.error("Error unsubscribing from " + subscription.topic, e);
+                _logger.error("Error unsubscribing from " + subscription._topic, e);
             }
         }
-    }
-
-    /**
-     * Register an unmarshaller to create {@link Event events} from {@link AWSIotMessage IoT messages}. If there is an existing
-     * unmarshaller it will be replaced. The default unmarshaller assumes the payload is JSON data.
-     *
-     * @param topic the topic
-     * @param eventType the event type
-     * @param unmarshaller the unmarshaller
-     */
-    public void registerUnmarshaller(final String topic, final String eventType, final EventUnmarshaller unmarshaller)
-    {
-
     }
 
     private void _createTopic(final String topic) throws AWSIotException

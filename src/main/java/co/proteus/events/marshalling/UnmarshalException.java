@@ -12,6 +12,8 @@
 package co.proteus.events.marshalling;
 
 /**
+ * Exception thrown when there is a problem decoding an IoT message.
+ *
  * @author Justin Piper (jpiper@proteus.co)
  */
 public class UnmarshalException extends Exception

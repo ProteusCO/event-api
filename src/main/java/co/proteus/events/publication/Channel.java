@@ -45,4 +45,13 @@ final class Channel
     {
         return Objects.hash(_topic, _eventType);
     }
+
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + '{' +
+               "_topic='" + _topic + '\'' +
+               ", _eventType='" + _eventType + '\'' +
+               '}';
+    }
 }

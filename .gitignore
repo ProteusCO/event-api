@@ -1,3 +1,6 @@
+.DS_Store
+.directory
+hs_err_pid*.log
 
 ### Gradle template
 .gradle
@@ -13,9 +16,6 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
-
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -23,7 +23,6 @@ gradle-app.setting
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml
-.idea/dictionaries
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -40,9 +39,6 @@ gradle-app.setting
 
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
-
-## File-based project format:
-*.iws
 
 ## Plugin-specific files:
 

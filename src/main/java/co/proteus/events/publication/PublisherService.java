@@ -14,7 +14,6 @@ package co.proteus.events.publication;
 import com.amazonaws.services.iot.client.AWSIotException;
 import com.amazonaws.services.iot.client.AWSIotMessage;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
-import com.amazonaws.services.iot.client.AWSIotQos;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -30,6 +29,8 @@ import static com.amazonaws.services.iot.client.AWSIotQos.QOS0;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
+ * Service to encode events and send them to IoT.
+ *
  * @author Justin Piper (jpiper@proteus.co)
  */
 public final class PublisherService
@@ -42,13 +43,12 @@ public final class PublisherService
     private static final EventMarshaller DEFAULT_MARSHALLER = new JsonMarshaller(QOS0);
 
     private final AWSIotMqttClient _client;
-    private final EventMarshaller _defaultMarshaller;
+    private final EventMarshaller _marshaller;
     private final Map<Channel,EventThrottler<?>> _throttlers = new ConcurrentHashMap<>();
-    private final Map<Channel, EventMarshaller> _marshallers = new ConcurrentHashMap<>();
 
     /**
      * Create an instance of {@code PublisherService} that uses the {@link #DEFAULT_MARSHALLER default marshaller} to encode event
-     * payloads if there is not one registered.
+     * payloads.
      *
      * @param client the IoT client
      */
@@ -61,12 +61,12 @@ public final class PublisherService
      * Create an instance of {@code PublisherService}
      *
      * @param client the IoT client
-     * @param defaultMarshaller the marshaller to use to encode event payloads if there is not one registered
+     * @param marshaller the marshaller to use to encode event payloads
      */
-    public PublisherService(final AWSIotMqttClient client, final EventMarshaller defaultMarshaller)
+    public PublisherService(final AWSIotMqttClient client, final EventMarshaller marshaller)
     {
         _client = client;
-        _defaultMarshaller = defaultMarshaller;
+        _marshaller = marshaller;
     }
 
     /**
@@ -83,20 +83,6 @@ public final class PublisherService
     }
 
     /**
-     * Register a marshaller to create {@link AWSIotMessage IoT messages} from {@link Event events}. If there is an existing
-     * throttler it will be replaced. The default marshaller creates a message that uses {@link AWSIotQos#QOS0 at most once}
-     * delivery and encodes the payload as JSON data using Jackson.
-     *
-     * @param topic the topic
-     * @param eventType the event type
-     * @param marshaller the marshaller
-     */
-    public void registerMarshaller(final String topic, final String eventType, final EventMarshaller marshaller)
-    {
-        _marshallers.put(new Channel(topic, eventType), marshaller);
-    }
-
-    /**
      * Publish an event and return a future for the result.
      *
      * @param event the event
@@ -110,7 +96,7 @@ public final class PublisherService
         final EventThrottler<T> throttler = (EventThrottler<T>) _throttlers.getOrDefault(new Channel(event), INCLUDE_ALL);
         final EventThrottler.Parameters<T> parameters = new EventThrottler.Parameters<>(event);
 
-        final boolean included = throttler.isIncluded(parameters);
+        final boolean included = throttler.shouldSend(parameters);
         return included? _publish(event) : completedFuture(new PublishResult(PublishStatus.THROTTLED));
     }
 
@@ -135,7 +121,6 @@ public final class PublisherService
 
     private <T> AWSIotMessage _marshal(final Event<T> event) throws MarshalException
     {
-        final EventMarshaller marshaller = _marshallers.getOrDefault(new Channel(event), _defaultMarshaller);
-        return marshaller.marshall(event);
+        return _marshaller.marshall(event);
     }
 }

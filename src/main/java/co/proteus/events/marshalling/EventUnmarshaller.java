@@ -28,12 +28,11 @@ public interface EventUnmarshaller
      * Create an {@code Event} from an {@code AWSIotMessage}
      *
      * @param message the message
-     * @param payloadClass the class of the {@link Event#getPayload event payload}
      * @param <T> the type of the event payload
      *
      * @return the event
      *
      * @throws UnmarshalException thrown if there is a problem creating the event
      */
-    <T> Event<T> unmarshall(AWSIotMessage message, final Class<T> payloadClass) throws UnmarshalException;
+    <T> Event<T> unmarshall(AWSIotMessage message) throws UnmarshalException;
 }

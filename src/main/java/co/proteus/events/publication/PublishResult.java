@@ -12,6 +12,8 @@
 package co.proteus.events.publication;
 
 /**
+ * The result of {@link PublisherService#publish publishing an event}
+ *
  * @author Justin Piper (jpiper@proteus.co)
  */
 public final class PublishResult
@@ -31,5 +33,13 @@ public final class PublishResult
     public PublishStatus getStatus()
     {
         return _status;
+    }
+
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + '{' +
+               "_status=" + _status +
+               '}';
     }
 }

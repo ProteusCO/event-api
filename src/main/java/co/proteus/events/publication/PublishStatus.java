@@ -12,6 +12,8 @@
 package co.proteus.events.publication;
 
 /**
+ * The status of {@link PublisherService#publish a published event}
+ *
  * @author Justin Piper (jpiper@proteus.co)
  */
 public enum PublishStatus

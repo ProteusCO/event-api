@@ -19,8 +19,6 @@ import co.proteus.events.publication.PublisherService;
 /**
  * Used by {@link PublisherService} to create {@link AWSIotMessage IoT messages} from events.
  *
- * @param <T> the type of the event payload
- *
  * @author Justin Piper (jpiper@proteus.co)
  */
 @FunctionalInterface
@@ -28,8 +26,12 @@ public interface EventMarshaller
 {
     /**
      * Create an {@code AWSIotMessage} for an event
+     *
      * @param event the event
+     * @param <T> the type of the event payload
+     *
      * @return the message
+     *
      * @throws MarshalException thrown if there is a problem creating the message
      */
     <T> AWSIotMessage marshall(Event<T> event) throws MarshalException;

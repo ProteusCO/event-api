@@ -42,3 +42,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+gradle.projectsEvaluated {
+    version.generateProjectInformationClass()
+}

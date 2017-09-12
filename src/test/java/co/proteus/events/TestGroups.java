@@ -11,14 +11,12 @@
 
 package co.proteus.events;
 
-import org.testng.annotations.Test;
-
-// FIXME: the final implementation needs unit tests
-public class NoTestsYet
+/**
+ * Constants class for different test groups that can be used with TestNG.
+ *
+ * @author Justin Piper (jpiper@proteus.co)
+ */
+public final class TestGroups
 {
-    @Test
-    public void noTestsYet()
-    {
-        assert false: "No tests yet";
-    }
+    public static final String UNIT = "unit";
 }

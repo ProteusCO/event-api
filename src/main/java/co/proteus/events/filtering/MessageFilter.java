@@ -55,5 +55,5 @@ public interface MessageFilter
      *
      * @return true if the message is relevant, false to ignore the message
      */
-    boolean isIncluded(final Parameters params);
+    boolean accept(final Parameters params);
 }

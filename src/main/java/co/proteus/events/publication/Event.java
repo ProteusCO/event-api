@@ -66,4 +66,13 @@ public final class Event<T>
         return _payload;
     }
 
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + '{' +
+               "_topic='" + _topic + '\'' +
+               ", _eventType='" + _eventType + '\'' +
+               ", _payload=" + _payload +
+               '}';
+    }
 }

@@ -29,7 +29,6 @@ test {
     }
 
     options {
-        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
         listeners << 'org.testng.reporters.XMLReporter'
     }
 }

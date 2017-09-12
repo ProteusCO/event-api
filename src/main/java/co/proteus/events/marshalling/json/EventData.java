@@ -11,9 +11,11 @@
 
 package co.proteus.events.marshalling.json;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import co.proteus.events.publication.Event;
 
@@ -24,9 +26,9 @@ import co.proteus.events.publication.Event;
  *
  * @author Justin Piper (jpiper@proteus.co)
  */
-@JsonAutoDetect
-public class EventData<T> extends EventMetadata
+public class EventData<T>
 {
+    private final String _eventType;
     private final T _payload;
 
     /**
@@ -36,8 +38,7 @@ public class EventData<T> extends EventMetadata
      */
     public EventData(final Event<T> event)
     {
-        super(event.getEventType());
-        _payload = event.getPayload();
+        this(event.getEventType(), event.getPayload());
     }
 
     /**
@@ -47,10 +48,20 @@ public class EventData<T> extends EventMetadata
      * @param payload the payload
      */
     @JsonCreator
-    public EventData(@JsonProperty("eventType") final String eventType, @JsonProperty("eventType") final T payload)
+    public EventData(@JsonProperty("eventType") final String eventType, @JsonProperty("payload") final T payload)
     {
-        super(eventType);
+        _eventType = eventType;
         _payload = payload;
+    }
+
+    /**
+     * Get the event type
+     *
+     * @return the event type
+     */
+    public String getEventType()
+    {
+        return _eventType;
     }
 
     /**
@@ -58,8 +69,18 @@ public class EventData<T> extends EventMetadata
      *
      * @return the event payload
      */
+    @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY, property = "@class")
     public T getPayload()
     {
         return _payload;
+    }
+
+    @Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + '{' +
+               "_eventType='" + _eventType + '\'' +
+               ", _payload=" + _payload +
+               '}';
     }
 }

@@ -66,5 +66,5 @@ public interface EventThrottler<T>
      *
      * @return true to send the event, false to drop it
      */
-    boolean isIncluded(final Parameters<T> params);
+    boolean shouldSend(final Parameters<T> params);
 }

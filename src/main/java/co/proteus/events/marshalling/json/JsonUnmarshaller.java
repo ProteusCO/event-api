@@ -12,8 +12,8 @@
 package co.proteus.events.marshalling.json;
 
 import com.amazonaws.services.iot.client.AWSIotMessage;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import java.io.IOException;
 
@@ -26,15 +26,16 @@ import co.proteus.events.publication.Event;
  */
 public class JsonUnmarshaller implements EventUnmarshaller
 {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectReader READER = new ObjectMapper()
+        .reader();
 
     @Override
-    public <T> Event<T> unmarshall(final AWSIotMessage message, final Class<T> payloadClass) throws UnmarshalException
+    public <T> Event<T> unmarshall(final AWSIotMessage message) throws UnmarshalException
     {
         try
         {
-            final JavaType valueType = MAPPER.getTypeFactory().constructParametricType(EventData.class, payloadClass);
-            final EventData<T> fields = MAPPER.readValue(message.getPayload(), valueType);
+            final EventData<T> fields = READER.forType(EventData.class)
+                .readValue(message.getPayload());
             return new Event<>(message.getTopic(), fields.getEventType(), fields.getPayload());
         }
         catch (final IOException | ClassCastException e)
