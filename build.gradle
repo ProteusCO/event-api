@@ -2,7 +2,6 @@ import com.proteusframework.build.GitInfo
 import org.gradle.authentication.http.BasicAuthentication
 
 buildscript {
-    ext.kotlin_version = version_kotlin
     repositories {
         if(hasLocalRepo){ maven { url = local_repo } }
         maven {
@@ -18,18 +17,11 @@ buildscript {
     }
     dependencies {
         classpath 'org.ajoberstar:gradle-git:1.3.0'
-        // aspectj-weave plugin for our use of Spring @Configurable
-        classpath 'com.i2rd:gradle-aspectj-weave:1.3',
-            'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
-//        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
     }
 
 }
 repositories {
-//    mavenLocal()
     if(hasLocalRepo){ maven { url = local_repo } }
     maven {
         url repoReleaseURL
@@ -51,9 +43,6 @@ repositories {
             basic(BasicAuthentication)
         }
     }
-    maven {
-        url "https://dl.bintray.com/kotlin/exposed"
-    }
 }
 GitInfo.populateProject(project)
 
@@ -62,75 +51,17 @@ apply from: 'gradle/config.gradle'
 apply from: 'gradle/dependencies.gradle'
 apply from: 'gradle/artifacts.gradle'
 apply from: 'gradle/tests.gradle'
-apply from: 'gradle/aspectj.gradle'
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/analysis.gradle'
-apply from: 'gradle/idea.gradle'
-
-
-
-task autoDeploy(type: com.proteusframework.build.DeployTask) {
-    group = 'Publishing'
-    id = "${findProperty('aws_id')?:'MISSING_ID'}"
-    secret ="${findProperty('aws_secret')?:'MISSING_SECRET'}"
-}
 
 task wrapper(type: Wrapper) {
     group 'Build Setup'
     gradleVersion = '3.3'
 }
 
-
-
 //noinspection GroovyAssignabilityCheck
 configurations.all {
-    exclude group: 'org.eclipse.birt.runtime.3_7_1', module: 'org.apache.commons.codec'
     resolutionStrategy {
-        dependencySubstitution {
-            substitute module('bouncycastle:bcmail-jdk14:138') with module('org.bouncycastle:bcmail-jdk15on:1.52')
-            substitute module('bouncycastle:bcprov-jdk14:138') with module('org.bouncycastle:bcprov-jdk15on:1.52')
-            substitute module('bouncycastle:bctsp-jdk14:138') with module('org.bouncycastle:bctsp-jdk15on:1.46')
-        }
-        eachDependency {DependencyResolveDetails details ->
-            if (details.requested.group == 'org.aspectj' && details.requested.name == 'aspectjweaver')
-            {
-                details.useVersion aspectjVersion
-            }
-            if (details.requested.group == 'xml-apis')
-            {
-                details.useVersion '1.4.+'
-            }
-            // Thanks BIRT
-            if (details.requested.group == 'org.eclipse.scout.sdk.deps')
-            {
-                switch (details.requested.name)
-                {
-                    case 'org.eclipse.core.runtime':
-                        details.useVersion('3.12.0.v20160606-1342'); break;
-                    case 'org.eclipse.core.contenttype':
-                        details.useVersion('3.5.100.v20160418-1621');break;
-                    case 'org.eclipse.core.expressions':
-                        details.useVersion('3.5.100.v20160418-1621'); break;
-                    case 'org.eclipse.equinox.preferences':
-                        details.useVersion('3.6.0.v20160120-1756'); break;
-                    case 'org.eclipse.core.filesystem':
-                        details.useVersion('1.6.0.v20160503-1608'); break;
-                    case 'org.eclipse.equinox.common':
-                        details.useVersion('3.8.0.v20160509-1230'); break;
-                    case 'org.eclipse.equinox.registry':
-                        details.useVersion('3.6.100.v20160223-2218'); break;
-                    case 'org.eclipse.osgi':
-                        details.useVersion('3.11.0.v20160603-1336'); break;
-                    case 'org.eclipse.core.jobs':
-                        details.useVersion('3.8.0.v20160509-0411'); break;
-                }
-            }
-        }
-        // cache dynamic versions for ...
-//        cacheDynamicVersionsFor 0, 'seconds'
-        // cache changing modules (SNAPSHOT) for ...
         cacheChangingModulesFor 300, 'seconds'
     }
 }
-
-

@@ -14,15 +14,6 @@ publishing {
                 type "javadoc"
                 conf "runtime"
             }
-            artifact(librariesZip) {
-                type "libraries"
-                conf "runtime"
-            }
-            components.web.usages.each { usage ->
-                usage.artifacts.each {
-                    artifact(it)
-                }
-            }
         }
         mavenPub(MavenPublication) {
             from components.java
@@ -32,14 +23,6 @@ publishing {
             }
             artifact(javadocJar) {
                 classifier "javadoc"
-            }
-            artifact(librariesZip) {
-                classifier "libraries"
-            }
-            components.web.usages.each { usage ->
-                usage.artifacts.each {
-                    artifact(it)
-                }
             }
         }
     }
