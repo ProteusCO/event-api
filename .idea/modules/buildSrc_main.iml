@@ -34,17 +34,6 @@
           <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/gradle-3.3/lib/gradle-installation-beacon-3.3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="file://$USER_HOME$/.gradle/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/gradle-3.3/src/installation-beacon" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/gradle-3.3/lib/gradle-installation-beacon-3.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
@@ -60,13 +49,24 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Gradle: com.amazonaws:aws-java-sdk-sqs:1.11.193">
+      <library name="Gradle: com.amazonaws:aws-java-sdk-sqs:1.11.195">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-sqs/1.11.193/3532700fdd9c30e8f5e6d47a95e6e222abc480ae/aws-java-sdk-sqs-1.11.193.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-sqs/1.11.195/c815f50e64758bac5ac2e5f2d68c0cfbcc4264f4/aws-java-sdk-sqs-1.11.195.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-sqs/1.11.193/ea792f3b89f1f508a306c330e8937b846f3d487/aws-java-sdk-sqs-1.11.193-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-sqs/1.11.195/77e58388d73e07541061192b52b7c913d3a08710/aws-java-sdk-sqs-1.11.195-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/gradle-3.3/lib/gradle-installation-beacon-3.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$USER_HOME$/.gradle/wrapper/dists/gradle-3.3-all/55gk2rcmfc6p2dg9u9ohc3hw9/gradle-3.3/src/installation-beacon" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -93,24 +93,24 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Gradle: com.amazonaws:aws-java-sdk-core:1.11.193">
+      <library name="Gradle: com.amazonaws:aws-java-sdk-core:1.11.195">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-core/1.11.193/9ebdab5b9e99cd0b0e7fe1035da3d4b64deb56c3/aws-java-sdk-core-1.11.193.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-core/1.11.195/52ec784bb50037bcacf94e7c32952364b1ac54c9/aws-java-sdk-core-1.11.195.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-core/1.11.193/6569ea9d5c4a526f27830ccb5f9187750c6b041c/aws-java-sdk-core-1.11.193-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-core/1.11.195/90ee6a6043c63fd42eec48589175266d62e887e4/aws-java-sdk-core-1.11.195-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Gradle: com.amazonaws:jmespath-java:1.11.193">
+      <library name="Gradle: com.amazonaws:jmespath-java:1.11.195">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.193/abe6298a2a71da33bcacae049b733f236e88d0ae/jmespath-java-1.11.193.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.195/68e9e0351e1dfcd0d4767f49df51ed1db69451d7/jmespath-java-1.11.195.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.193/2d889415383ae80cb75cea9a3f33a8c87347a8d8/jmespath-java-1.11.193-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/jmespath-java/1.11.195/981613615b6849a4c69b2b0a2aecdca3065af306/jmespath-java-1.11.195-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

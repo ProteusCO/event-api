@@ -12,18 +12,14 @@
 package co.proteus.events.publication;
 
 /**
- * The status of {@link PublisherService#publish a published event}
+ * The result of {@link SubscriptionService#subscribe subscribing to a topic}
  *
  * @author Justin Piper (jpiper@proteus.co)
  */
-public enum PublishStatus
+public enum SubscribeStatus
 {
-    /** The message was published */
-    PUBLISHED,
-    /** The message was not published due to a problem with the IoT client */
-    FAILED,
-    /** The message was not published because the request timed out */
-    TIMED_OUT,
-    /** The message was not published because it was throttled */
-    THROTTLED
+    /** The IoT client successfully subscribed to the topic */
+    SUBSCRIBED,
+    /** All subscribers unsubscribed before the IoT client ever successfully subscribed to the topic */
+    CANCELED
 }
