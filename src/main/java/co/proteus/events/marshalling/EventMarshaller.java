@@ -25,14 +25,14 @@ import co.proteus.events.publication.PublisherService;
 public interface EventMarshaller
 {
     /**
-     * Create an {@code AWSIotMessage} for an event
+     * Encode the payload for an {@link AWSIotMessage} for an event as a {@code byte[]}
      *
      * @param event the event
      * @param <T> the type of the event payload
      *
-     * @return the message
+     * @return the encoded payload
      *
-     * @throws MarshalException thrown if there is a problem creating the message
+     * @throws MarshalException thrown if there is a problem encoding the payload
      */
-    <T> AWSIotMessage marshall(Event<T> event) throws MarshalException;
+    <T> byte[] marshall(Event<T> event) throws MarshalException;
 }

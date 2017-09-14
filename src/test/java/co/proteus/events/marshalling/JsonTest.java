@@ -237,66 +237,59 @@ public final class JsonTest
 
     // An event with no payload
     private static final Event<Void> EVENT_VOID = new Event<>(TOPIC, TYPE, null);
-    private static final byte[] JSON_VOID = (
+    private static final String JSON_VOID = (
         "{\"eventType\":\"sample-type\",\"payload\":"
-        + "null}")
-        .getBytes(UTF_8);
+        + "null}");
     private static final AWSIotMessage MESSAGE_VOID = new AWSIotMessage(TOPIC, QOS, JSON_VOID);
 
     // An event with a String payload
     private static final Event<String> EVENT_STRING = new Event<>(TOPIC, TYPE, "hello");
-    private static final byte[] JSON_STRING = (
+    private static final String JSON_STRING = (
         "{\"eventType\":\"sample-type\",\"payload\":"
-        + "\"hello\"}")
-        .getBytes(UTF_8);
+        + "\"hello\"}");
     private static final AWSIotMessage MESSAGE_STRING = new AWSIotMessage(TOPIC, QOS, JSON_STRING);
 
     // An event with a Date payload
     private static final Event<Date> EVENT_DATE = new Event<>(TOPIC, TYPE, new Date(0));
-    private static final byte[] JSON_DATE = (
+    private static final String JSON_DATE = (
         "{\"eventType\":\"sample-type\",\"payload\":"
-        + "[\"java.util.Date\",0]}")
-        .getBytes(UTF_8);
+        + "[\"java.util.Date\",0]}");
     private static final AWSIotMessage MESSAGE_DATE = new AWSIotMessage(TOPIC, QOS, JSON_DATE);
 
     // An event with a numeric payload
     private static final Event<Long> EVENT_NUM = new Event<>(TOPIC, TYPE, 32767L);
-    private static final byte[] JSON_NUM = (
+    private static final String JSON_NUM = (
         "{\"eventType\":\"sample-type\",\"payload\":"
-        + "[\"java.lang.Long\",32767]}")
-        .getBytes(UTF_8);
+        + "[\"java.lang.Long\",32767]}");
     private static final AWSIotMessage MESSAGE_NUM = new AWSIotMessage(TOPIC, QOS, JSON_NUM);
 
     // An event with a simple payload class
     private static final Event<Person> EVENT_PERSON = new Event<>(TOPIC, TYPE, new Person("John", "Doe", new Date(0)));
-    private static final byte[] JSON_PERSON = (
+    private static final String JSON_PERSON = (
         "{\"eventType\":\"sample-type\",\"payload\":"
         + "{\"@class\":\"co.proteus.events.marshalling.JsonTest$Person\","
         + "\"firstName\":\"John\","
         + "\"lastName\":\"Doe\","
-        + "\"birthday\":0}}")
-        .getBytes(UTF_8);
+        + "\"birthday\":0}}");
     private static final AWSIotMessage MESSAGE_PERSON = new AWSIotMessage(TOPIC, QOS, JSON_PERSON);
 
     // An event with a simple collection payload
     private static final Event<Set<String>> EVENT_COL = new Event<>(TOPIC, TYPE, new LinkedHashSet<>(asList("abc", "def", "ghi")));
-    private static final byte[] JSON_COL = (
+    private static final String JSON_COL = (
         "{\"eventType\":\"sample-type\",\"payload\":"
-        + "[\"java.util.LinkedHashSet\",[\"abc\",\"def\",\"ghi\"]]}")
-        .getBytes(UTF_8);
+        + "[\"java.util.LinkedHashSet\",[\"abc\",\"def\",\"ghi\"]]}");
     private static final AWSIotMessage MESSAGE_COL = new AWSIotMessage(TOPIC, QOS, JSON_COL);
 
     // An event with a type hierarchy payload
     private static final Animal DOG = new Dog("Rover", singletonList(Dog.Trick.SIT));
     private static final Animal CAT = new Cat("Fluffy", singletonList(Cat.Trick.NAP));
     private static final Event<Zoo> EVENT_PETS = new Event<>(TOPIC, TYPE, new Zoo(asList(DOG, CAT)));
-    private static final byte[] JSON_PET = (
+    private static final String JSON_PET = (
         "{\"eventType\":\"sample-type\",\"payload\":"
         + "[\"co.proteus.events.marshalling.JsonTest$Zoo\",["
         + "{\"co.proteus.events.marshalling.JsonTest$Dog\":{\"name\":\"Rover\",\"tricks\":[\"SIT\"]}},"
         + "{\"co.proteus.events.marshalling.JsonTest$Cat\":{\"name\":\"Fluffy\",\"tricks\":[\"NAP\"]}}"
-        + "]]}")
-        .getBytes(UTF_8);
+        + "]]}");
     private static final AWSIotMessage MESSAGE_PET = new AWSIotMessage(TOPIC, QOS, JSON_PET);
 
     private EventMarshaller _marshaller;
@@ -305,12 +298,27 @@ public final class JsonTest
     @BeforeTest(groups = UNIT)
     public void setup()
     {
-        _marshaller = new JsonMarshaller(QOS);
+        _marshaller = new JsonMarshaller();
         _unmarshaller = new JsonUnmarshaller();
     }
 
     @DataProvider
-    Object[][] createData()
+    Object[][] createPayload()
+    {
+        return new Object[][]
+            {
+                {EVENT_VOID, JSON_VOID},
+                {EVENT_STRING, JSON_STRING},
+                {EVENT_DATE, JSON_DATE},
+                {EVENT_NUM, JSON_NUM},
+                {EVENT_PERSON, JSON_PERSON},
+                {EVENT_COL, JSON_COL},
+                {EVENT_PETS, JSON_PET},
+            };
+    }
+
+    @DataProvider
+    Object[][] createMessages()
     {
         return new Object[][]
             {
@@ -324,15 +332,14 @@ public final class JsonTest
             };
     }
 
-    @Test(groups = UNIT, dataProvider = "createData")
-    public void eventsShouldMarshalToJson(final Event<?> event, final AWSIotMessage expected) throws MarshalException
+    @Test(groups = UNIT, dataProvider = "createPayload")
+    public void eventsShouldMarshalToJson(final Event<?> event, final String expected) throws MarshalException
     {
-        final AWSIotMessage actual = _marshaller.marshall(event);
-        assertEquals(actual.getTopic(), expected.getTopic());
-        assertEquals(actual.getStringPayload(), expected.getStringPayload());
+        final byte[] actual = _marshaller.marshall(event);
+        assertEquals(new String(actual, UTF_8), expected);
     }
 
-    @Test(groups = UNIT, dataProvider = "createData")
+    @Test(groups = UNIT, dataProvider = "createMessages")
     public void eventsShouldUnmarshalFromJson(final Event<?> expected, final AWSIotMessage message) throws UnmarshalException
     {
         final Event<?> actual = _unmarshaller.unmarshall(message);
